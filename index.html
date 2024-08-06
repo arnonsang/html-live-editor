@@ -281,25 +281,53 @@
 
       function updatePreview() {
         const previewFrame = document.getElementById("preview");
-        const previewContent = editor.innerText;
+        const previewContent = editor.innerText; // Use innerText
         previewFrame.srcdoc = previewContent;
-        Prism.highlightElement(editor);
-        // Remove the moveCursorToEnd() call from here
+
+        // Wrap Prism highlighting in preserveCursorPosition
+        preserveCursorPosition(() => {
+          Prism.highlightElement(editor);
+        });
       }
+
+      editor.addEventListener("input", () => {
+        preserveCursorPosition(() => {
+          updatePreview();
+        });
+      });
 
       function preserveCursorPosition(callback) {
         const selection = window.getSelection();
-        const range = selection.getRangeAt(0);
-        const start = range.startOffset;
-        const end = range.endOffset;
+        let range = selection.getRangeAt(0);
+        let start = range.startOffset;
+        let end = range.endOffset;
+        let node = range.startContainer;
+
+        // Store the path to the current node
+        let path = [];
+        while (node !== editor) {
+          path.unshift(Array.from(node.parentNode.childNodes).indexOf(node));
+          node = node.parentNode;
+        }
 
         callback();
 
-        const newRange = document.createRange();
-        newRange.setStart(editor.firstChild, start);
-        newRange.setEnd(editor.firstChild, end);
+        // Restore the selection
+        let current = editor;
+        for (let i = 0; i < path.length; i++) {
+          if (current.childNodes[path[i]]) {
+            current = current.childNodes[path[i]];
+          } else {
+            console.error("Failed to restore cursor position");
+            return;
+          }
+        }
+
+        range = document.createRange();
+        range.setStart(current, start);
+        range.setEnd(current, end);
         selection.removeAllRanges();
-        selection.addRange(newRange);
+        selection.addRange(range);
       }
 
       function handleEditorKeyDown(e) {
@@ -470,7 +498,7 @@
       });
 
       formatCodeButton.addEventListener("click", () => {
-        const unformattedCode = editor.textContent;
+        const unformattedCode = editor.textContent; 
         const formattedCode = html_beautify(unformattedCode, {
           indent_size: 2,
           indent_char: " ",
@@ -501,7 +529,7 @@
       window.addEventListener("load", () => {
         editor.focus();
         updatePreview();
-        moveCursorToEnd();
+        //moveCursorToEnd();
       });
 
       // Initial update and cursor position adjustment
