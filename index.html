@@ -1,540 +1,508 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>HTML Live Editor | iamickdev</title>
-    <!-- metadata -->
-    <meta
-      name="description"
-      content="HTML Live Editor to write and preview HTML code in real-time with syntax highlighting by iamickdev"
-    />
-    <meta
-      name="keywords"
-      content="HTML, Editor, Live, Preview, Code, Syntax, Highlighting, iamickdev"
-    />
-    <meta name="author" content="iamickdev" />
-    <meta name="robots" content="index, follow" />
 
-    <meta name="twitter:card" content="summary" />
-    <meta name="twitter:site" content="@iamickdev" />
-    <meta name="twitter:creator" content="@iamickdev" />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HTML Live Editor | iamickdev</title>
+  <!-- metadata -->
+  <meta name="description"
+    content="HTML Live Editor to write and preview HTML code in real-time with syntax highlighting by iamickdev" />
+  <meta name="keywords" content="HTML, Editor, Live, Preview, Code, Syntax, Highlighting, iamickdev" />
+  <meta name="author" content="iamickdev" />
+  <meta name="robots" content="index, follow" />
 
-    <meta property="og:url" content="https://html-editor.iamickdev.com/" />
-    <meta property="og:title" content="HTML Live Editor | iamickdev" />
-    <meta
-      property="og:description"
-      content="HTML Live Editor to write and preview HTML code in real-time with syntax highlighting by iamickdev"
-    />
-    <meta
-      property="og:image"
-      content="https://html-editor.iamickdev.com//preview.png"
-    />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@iamickdev" />
+  <meta name="twitter:creator" content="@iamickdev" />
 
-    <link rel="icon" href="https://www.iamickdev.com/favicon.ico" />
-    <link rel="canonical" href="https://html-editor.iamickdev.com/" />
+  <meta property="og:url" content="https://html-editor.iamickdev.com/" />
+  <meta property="og:title" content="HTML Live Editor | iamickdev" />
+  <meta property="og:description"
+    content="HTML Live Editor to write and preview HTML code in real-time with syntax highlighting by iamickdev" />
+  <meta property="og:image" content="https://html-editor.iamickdev.com//preview.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:type" content="website" />
 
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-    <link rel="manifest" href="/site.webmanifest" />
+  <link rel="icon" href="https://www.iamickdev.com/favicon.ico" />
+  <link rel="canonical" href="https://html-editor.iamickdev.com/" />
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism.min.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-okaidia.min.css"
-    />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/prism.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-markup.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.0/beautify-html.min.js"></script>
-    <script>
-      // Configure Tailwind for dark mode using the 'class' strategy
-      tailwind.config = {
-        darkMode: "class",
-      };
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+  <link rel="manifest" href="/site.webmanifest" />
 
-      // Load theme from local storage or system preference
-      if (
-        localStorage.getItem("color-theme") === "dark" ||
-        (!("color-theme" in localStorage) &&
-          window.matchMedia("(prefers-color-scheme: dark)").matches)
-      ) {
-        document.documentElement.classList.add("dark");
-      } else {
-        document.documentElement.classList.remove("dark");
-      }
-    </script>
-    <style>
-      #editor {
-        white-space: pre-wrap;
-        word-wrap: break-word;
-        caret-color: currentColor;
-        tab-size: 4;
-      }
-      #editor:focus {
-        outline: none;
-      }
-      #context-menu {
-        position: absolute;
-        z-index: 1000;
-        background: white;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-      }
-      #context-menu button {
-        display: block;
-        padding: 8px 12px;
-        width: 100%;
-        text-align: left;
-      }
-      #context-menu button:hover {
-        background-color: #f0f0f0;
-      }
-      .fullscreen {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 1000;
-        background: white;
-        overflow: auto;
-      }
-      .fullscreen.dark {
-        background: #1a202c;
-      }
-    </style>
-  </head>
-  <body
-    class="bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-white transition-colors duration-200"
-  >
-    <div class="container mx-auto p-4">
-      <nav
-        class="bg-white dark:bg-gray-800 shadow-md rounded-lg p-4 mb-4 flex justify-bewteen space-x-2"
-      >
-        <div class="w-1/2 p-4 flex justify-start space-x-2 items-center">
-          <h1 class="text-2xl font-bold">
-            HTML Editor
-            <span class="text-sm"
-              >by
-              <a class="hover:underline" href="https://www.iamickdev.com"
-                >iamickdev</a
-              ></span
-            >
-          </h1>
-        </div>
-        <div class="w-1/2 p-4 flex justify-end space-x-2">
-          <button
-            id="toggleLayout"
-            class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors duration-200"
-            title="Switch editor layout"
-          >
-            <i class="fas fa-columns fa-rotate-270"></i>
-          </button>
-          <button
-            id="swapPositions"
-            class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-colors duration-200"
-            title="Swap position"
-          >
-            <i class="fas fa-exchange-alt"></i>
-          </button>
-          <button
-            id="toggleDarkMode"
-            class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg transition-colors duration-200"
-            title="Toggle dark mode"
-          >
-            <i class="fas fa-moon"></i>
-          </button>
-          <button
-            id="toggleHeight"
-            class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg transition-colors duration-200"
-            title="Set editor to fit content"
-          >
-            <i class="fas fa-arrows-alt-v"></i>
-          </button>
-          <button
-            id="fullscreenPreview"
-            class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors duration-200"
-            title="Using fullscreen mode"
-          >
-            <i class="fas fa-expand-arrows-alt"></i>
-          </button>
-        </div>
-      </nav>
-      <div
-        id="editor-container"
-        class="flex flex-row space-x-4 h-[calc(100vh-120px)]"
-      >
-        <!-- <div id="preview" class="w-1/2 bg-blue-100 dark:bg-blue-900 p-4 rounded-lg shadow-md overflow-auto transition-colors duration-200"></div> -->
-        <iframe
-          id="preview"
-          class="w-1/2 border-2 border-gray-800 dark:border-gray-200 p-4 rounded-lg shadow-md overflow-auto transition-colors duration-200"
-        ></iframe>
-        <pre
-          id="editor"
-          class="w-1/2 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md overflow-auto transition-colors duration-200 text-black dark:text-white font-mono language-html"
-          contenteditable="true"
-        ></pre>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-okaidia.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-markup.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.0/beautify-html.min.js"></script>
+  <script>
+    // Configure Tailwind for dark mode using the 'class' strategy
+    tailwind.config = {
+      darkMode: "class",
+    };
+
+    // Load theme from local storage or system preference
+    if (
+      localStorage.getItem("color-theme") === "dark" ||
+      (!("color-theme" in localStorage) &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches)
+    ) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  </script>
+  <style>
+    #editor {
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      caret-color: currentColor;
+      tab-size: 4;
+    }
+
+    #editor:focus {
+      outline: none;
+    }
+
+    #context-menu {
+      position: absolute;
+      z-index: 1000;
+      background: white;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    #context-menu button {
+      display: block;
+      padding: 8px 12px;
+      width: 100%;
+      text-align: left;
+    }
+
+    #context-menu button:hover {
+      background-color: #f0f0f0;
+    }
+
+    .fullscreen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1000;
+      background: white;
+      overflow: auto;
+    }
+
+    .fullscreen.dark {
+      background: #1a202c;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-white transition-colors duration-200">
+  <div class="container mx-auto p-4">
+    <nav class="bg-white dark:bg-gray-800 shadow-md rounded-lg p-4 mb-4 flex justify-bewteen space-x-2">
+      <div class="w-1/2 p-4 flex justify-start space-x-2 items-center">
+        <h1 class="text-2xl font-bold">
+          HTML Editor
+          <span class="text-sm">by
+            <a class="hover:underline" href="https://www.iamickdev.com">iamickdev</a></span>
+        </h1>
       </div>
+      <div class="w-1/2 p-4 flex justify-end space-x-2">
+        <button id="toggleLayout"
+          class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors duration-200"
+          title="Switch editor layout">
+          <i class="fas fa-columns fa-rotate-270"></i>
+        </button>
+        <button id="swapPositions"
+          class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-colors duration-200"
+          title="Swap position">
+          <i class="fas fa-exchange-alt"></i>
+        </button>
+        <button id="toggleDarkMode"
+          class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg transition-colors duration-200"
+          title="Toggle dark mode">
+          <i class="fas fa-moon"></i>
+        </button>
+        <button id="toggleHeight"
+          class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg transition-colors duration-200"
+          title="Set editor to fit content">
+          <i class="fas fa-arrows-alt-v"></i>
+        </button>
+        <button id="fullscreenPreview"
+          class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors duration-200"
+          title="Using fullscreen mode">
+          <i class="fas fa-expand-arrows-alt"></i>
+        </button>
+      </div>
+    </nav>
+    <div id="editor-container" class="flex flex-row space-x-4 h-[calc(100vh-120px)]">
+      <!-- <div id="preview" class="w-1/2 bg-blue-100 dark:bg-blue-900 p-4 rounded-lg shadow-md overflow-auto transition-colors duration-200"></div> -->
+      <iframe id="preview"
+        class="w-1/2 border-2 border-gray-800 dark:border-gray-200 p-4 rounded-lg shadow-md overflow-auto transition-colors duration-200"></iframe>
+      <pre id="editor"
+        class="w-1/2 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md overflow-auto transition-colors duration-200 text-black dark:text-white font-mono language-html"
+        contenteditable="true"></pre>
     </div>
+  </div>
 
-    <div id="context-menu" class="hidden">
-      <button
-        id="context-format-code"
-        class="bg-gray-300 hover:bg-gray-800 hover:text-gray-800 px-4 py-2 rounded-lg transition-colors duration-200"
-      >
-        <i class="fas fa-indent"></i> Format Code
-      </button>
+  <div id="context-menu" class="hidden">
+    <button id="context-format-code"
+      class="bg-gray-300 hover:bg-gray-800 hover:text-gray-800 px-4 py-2 rounded-lg transition-colors duration-200">
+      <i class="fas fa-indent"></i> Format Code
+    </button>
 
-      <!-- Add all navbar button to context menu -->
-      <button
-        id="context-toggleLayout"
-        class="bg-blue-500 hover:bg-blue-600 hover:text-gray-800 text-white px-4 py-2 rounded-lg transition-colors duration-200"
-      >
-        <i class="fas fa-columns"></i> Switch layout
-      </button>
-      <button
-        id="context-swapPositions"
-        class="bg-green-500 hover:bg-green-600 hover:text-gray-800 text-white px-4 py-2 rounded-lg transition-colors duration-200"
-      >
-        <i class="fas fa-exchange-alt"></i> Swap position
-      </button>
-      <button
-        id="context-toggleDarkMode"
-        class="bg-yellow-500 hover:bg-yellow-600 hover:text-gray-800 text-white px-4 py-2 rounded-lg transition-colors duration-200"
-      >
-        <i class="fas fa-moon"></i> Toggle Dark Mode
-      </button>
-      <button
-        id="context-toggleHeight"
-        class="bg-purple-500 hover:bg-purple-600 hover:text-gray-800 text-white px-4 py-2 rounded-lg transition-colors duration-200"
-      >
-        <i class="fas fa-arrows-alt-v"></i> Expand / Fit
-      </button>
-      <button
-        id="context-fullscreenPreview"
-        class="bg-red-500 hover:bg-red-600 hover:text-gray-800 text-white px-4 py-2 rounded-lg transition-colors duration-200"
-      >
-        <i class="fas fa-expand-arrows-alt"></i> Fullscreen Preview
-      </button>
+    <!-- Add all navbar button to context menu -->
+    <button id="context-toggleLayout"
+      class="bg-blue-500 hover:bg-blue-600 hover:text-gray-800 text-white px-4 py-2 rounded-lg transition-colors duration-200">
+      <i class="fas fa-columns"></i> Switch layout
+    </button>
+    <button id="context-swapPositions"
+      class="bg-green-500 hover:bg-green-600 hover:text-gray-800 text-white px-4 py-2 rounded-lg transition-colors duration-200">
+      <i class="fas fa-exchange-alt"></i> Swap position
+    </button>
+    <button id="context-toggleDarkMode"
+      class="bg-yellow-500 hover:bg-yellow-600 hover:text-gray-800 text-white px-4 py-2 rounded-lg transition-colors duration-200">
+      <i class="fas fa-moon"></i> Toggle Dark Mode
+    </button>
+    <button id="context-toggleHeight"
+      class="bg-purple-500 hover:bg-purple-600 hover:text-gray-800 text-white px-4 py-2 rounded-lg transition-colors duration-200">
+      <i class="fas fa-arrows-alt-v"></i> Expand / Fit
+    </button>
+    <button id="context-fullscreenPreview"
+      class="bg-red-500 hover:bg-red-600 hover:text-gray-800 text-white px-4 py-2 rounded-lg transition-colors duration-200">
+      <i class="fas fa-expand-arrows-alt"></i> Fullscreen Preview
+    </button>
 
-      <button
-        id="generatePreviewURL"
-        class="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded-lg transition-colors duration-200"
-      >
-        <i class="fas fa-link"></i> Open preview
-      </button>
-    </div>
+    <button id="generatePreviewURL"
+      class="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded-lg transition-colors duration-200">
+      <i class="fas fa-link"></i> Open preview
+    </button>
+  </div>
 
-    <script>
-      const preview = document.getElementById("preview");
-      const editor = document.getElementById("editor");
-      const toggleLayout = document.getElementById("toggleLayout");
-      const swapPositions = document.getElementById("swapPositions");
-      const toggleDarkMode = document.getElementById("toggleDarkMode");
-      const toggleHeight = document.getElementById("toggleHeight");
-      const fullscreenPreview = document.getElementById("fullscreenPreview");
-      const editorContainer = document.getElementById("editor-container");
-      const contextMenu = document.getElementById("context-menu");
-      const formatCodeButton = document.getElementById("context-format-code");
-      const contextToggleLayout = document.getElementById(
-        "context-toggleLayout"
-      );
-      const contextSwapPositions = document.getElementById(
-        "context-swapPositions"
-      );
-      const contextToggleDarkMode = document.getElementById(
-        "context-toggleDarkMode"
-      );
-      const contextToggleHeight = document.getElementById(
-        "context-toggleHeight"
-      );
-      const contextFullscreenPreview = document.getElementById(
-        "context-fullscreenPreview"
-      );
+  <script>
+    const preview = document.getElementById("preview");
+    const editor = document.getElementById("editor");
+    const toggleLayout = document.getElementById("toggleLayout");
+    const swapPositions = document.getElementById("swapPositions");
+    const toggleDarkMode = document.getElementById("toggleDarkMode");
+    const toggleHeight = document.getElementById("toggleHeight");
+    const fullscreenPreview = document.getElementById("fullscreenPreview");
+    const editorContainer = document.getElementById("editor-container");
+    const contextMenu = document.getElementById("context-menu");
+    const formatCodeButton = document.getElementById("context-format-code");
+    const contextToggleLayout = document.getElementById(
+      "context-toggleLayout"
+    );
+    const contextSwapPositions = document.getElementById(
+      "context-swapPositions"
+    );
+    const contextToggleDarkMode = document.getElementById(
+      "context-toggleDarkMode"
+    );
+    const contextToggleHeight = document.getElementById(
+      "context-toggleHeight"
+    );
+    const contextFullscreenPreview = document.getElementById(
+      "context-fullscreenPreview"
+    );
 
-      function generatePreviewURL() {
-        const htmlContent = editor.textContent;
-        const key = "preview_" + Date.now();
-        localStorage.setItem(key, htmlContent);
-        return `preview?key=${encodeURIComponent(key)}`;
-      }
+    function generatePreviewURL() {
+      const htmlContent = editor.textContent;
+      const key = "preview_" + Date.now();
+      localStorage.setItem(key, htmlContent);
+      return `preview?key=${encodeURIComponent(key)}`;
+    }
 
-      document
-        .getElementById("generatePreviewURL")
-        .addEventListener("click", () => {
-          const previewURL = generatePreviewURL();
-          window.open(previewURL, "_blank");
-        });
-
-      function updatePreview() {
-        const previewFrame = document.getElementById("preview");
-        const previewContent = editor.innerText; // Use innerText
-        previewFrame.srcdoc = previewContent;
-
-        // Wrap Prism highlighting in preserveCursorPosition
-        preserveCursorPosition(() => {
-          Prism.highlightElement(editor);
-        });
-      }
-
-      editor.addEventListener("input", () => {
-        preserveCursorPosition(() => {
-          updatePreview();
-        });
+    document
+      .getElementById("generatePreviewURL")
+      .addEventListener("click", () => {
+        const previewURL = generatePreviewURL();
+        window.open(previewURL, "_blank");
       });
 
-      function preserveCursorPosition(callback) {
-        const selection = window.getSelection();
-        let range = selection.getRangeAt(0);
-        let start = range.startOffset;
-        let end = range.endOffset;
-        let node = range.startContainer;
+    function updatePreview() {
+      const previewFrame = document.getElementById("preview");
+      const previewContent = editor.innerText;
+      previewFrame.srcdoc = previewContent;
 
-        // Store the path to the current node
-        let path = [];
-        while (node !== editor) {
-          path.unshift(Array.from(node.parentNode.childNodes).indexOf(node));
-          node = node.parentNode;
-        }
-
-        callback();
-
-        // Restore the selection
-        let current = editor;
-        for (let i = 0; i < path.length; i++) {
-          if (current.childNodes[path[i]]) {
-            current = current.childNodes[path[i]];
-          } else {
-            console.error("Failed to restore cursor position");
-            return;
-          }
-        }
-
-        range = document.createRange();
-        range.setStart(current, start);
-        range.setEnd(current, end);
-        selection.removeAllRanges();
-        selection.addRange(range);
-      }
-
-      function handleEditorKeyDown(e) {
-        if (e.key === "Tab") {
-          e.preventDefault();
-          document.execCommand("insertHTML", false, "    ");
-        } else if (e.key === "Enter") {
-          e.preventDefault();
-          document.execCommand("insertLineBreak");
-        }
-      }
-
-      editor.addEventListener("keydown", handleEditorKeyDown);
-
-      function moveCursorToEnd() {
-        const range = document.createRange();
-        const sel = window.getSelection();
-        range.selectNodeContents(editor);
-        range.collapse(false);
-        sel.removeAllRanges();
-        sel.addRange(range);
-      }
-
-      editor.addEventListener("input", () => {
-        preserveCursorPosition(() => {
-          updatePreview();
-        });
-      });
-
-      toggleLayout.addEventListener("click", () => {
-        if (editorContainer.classList.contains("flex-row")) {
-          editorContainer.classList.remove("flex-row", "space-x-4");
-          editorContainer.classList.add("flex-col", "space-y-4");
-          preview.classList.remove("w-1/2");
-          preview.classList.add("w-full", "h-1/2");
-          editor.classList.remove("w-1/2");
-          editor.classList.add("w-full", "h-1/2");
-
-          //change icon
-          toggleLayout.innerHTML = '<i class="fas fa-columns"></i>';
-        } else {
-          editorContainer.classList.remove("flex-col", "space-y-4");
-          editorContainer.classList.add("flex-row", "space-x-4");
-          preview.classList.remove("w-full", "h-1/2");
-          preview.classList.add("w-1/2");
-          editor.classList.remove("w-full", "h-1/2");
-          editor.classList.add("w-1/2");
-          //change icon to row
-          toggleLayout.innerHTML =
-            '<i class="fas fa-columns fa-rotate-270"></i>';
-        }
-      });
-
-      swapPositions.addEventListener("click", () => {
-        if (editorContainer.classList.contains("flex-row")) {
-          editorContainer.prepend(editorContainer.lastElementChild);
-          if (editorContainer.classList.contains("flex-row")) {
-            swapPositions.innerHTML = '<i class="fas fa-exchange-alt"></i>';
-          } else {
-            swapPositions.innerHTML =
-              '<i class="fas fa-exchange-alt fa-rotate-90"></i>';
-          }
-        } else {
-          editorContainer.append(editorContainer.firstElementChild);
-          if (editorContainer.classList.contains("flex-row")) {
-            swapPositions.innerHTML = '<i class="fas fa-exchange-alt"></i>';
-          } else {
-            swapPositions.innerHTML =
-              '<i class="fas fa-exchange-alt fa-rotate-90"></i>';
-          }
-        }
-      });
-
-      toggleDarkMode.addEventListener("click", () => {
-        document.documentElement.classList.toggle("dark");
-        if (document.documentElement.classList.contains("dark")) {
-          localStorage.setItem("color-theme", "dark");
-          //change icon
-          toggleDarkMode.innerHTML = '<i class="fas fa-sun"></i>';
-          //add title
-          toggleDarkMode.title = "Toggle Light Mode";
-        } else {
-          localStorage.setItem("color-theme", "light");
-          //change icon
-          toggleDarkMode.innerHTML = '<i class="fas fa-moon"></i>';
-          //add title
-          toggleDarkMode.title = "Toggle Dark Mode";
-        }
+      // Wrap Prism highlighting in preserveCursorPosition
+      preserveCursorPosition(() => {
         Prism.highlightElement(editor);
       });
+    }
 
-      toggleHeight.addEventListener("click", () => {
-        // preview.classList.toggle("h-[calc(100vh-120px)]");
-        // editor.classList.toggle("h-[calc(100vh-120px)]");
-        // //change icon
-        if (editor.classList.contains("h-[calc(100vh-120px)]")) {
-          toggleHeight.innerHTML = '<i class="fas fa-arrows-alt-h"></i>';
+    const debouncedUpdatePreview = debounce(updatePreview, 300);
+    function debounce(func, wait) {
+      let timeout;
+      return function executedFunction(...args) {
+        const later = () => {
+          clearTimeout(timeout);
+          func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+      };
+    }
 
-          //add title
-          toggleHeight.title = "Collapse Editor to original height";
+    editor.addEventListener("input", () => {
+      // updatePreview();
+      debouncedUpdatePreview();
+    });
 
-          preview.classList.remove("h-[calc(100vh-120px)]");
-          editor.classList.remove("h-[calc(100vh-120px)]");
+    function preserveCursorPosition(callback) {
+      const selection = window.getSelection();
+      if (selection.rangeCount === 0) return;
 
-          preview.classList.add("h-fit");
-          editor.classList.add("h-fit");
+      const range = selection.getRangeAt(0);
+      const preSelectionRange = range.cloneRange();
+      preSelectionRange.selectNodeContents(editor);
+      preSelectionRange.setEnd(range.startContainer, range.startOffset);
+      const start = preSelectionRange.toString().length;
 
-          console.log(editor.classList.contains("h-[calc(100vh-120px)]"));
+      callback();
+
+      const newRange = document.createRange();
+      let charIndex = 0, done = false;
+
+      findPosition(editor, start);
+
+      function findPosition(node, targetOffset) {
+        if (done) return;
+
+        if (node.nodeType === Node.TEXT_NODE) {
+          const nextCharIndex = charIndex + node.length;
+          if (!done && targetOffset >= charIndex && targetOffset <= nextCharIndex) {
+            newRange.setStart(node, targetOffset - charIndex);
+            newRange.setEnd(node, targetOffset - charIndex);
+            done = true;
+          }
+          charIndex = nextCharIndex;
         } else {
-          toggleHeight.innerHTML = '<i class="fas fa-arrows-alt-v"></i>';
-
-          toggleHeight.title = "Set Editor to fit with content";
-
-          preview.classList.remove("h-fit");
-          editor.classList.remove("h-fit");
-
-          preview.classList.add("h-[calc(100vh-120px)]");
-          editor.classList.add("h-[calc(100vh-120px)]");
+          for (let i = 0; i < node.childNodes.length; i++) {
+            findPosition(node.childNodes[i], targetOffset);
+          }
         }
-      });
+      }
 
-      fullscreenPreview.addEventListener("click", () => {
-        if (!document.fullscreenElement) {
-          editorContainer.requestFullscreen().catch((err) => console.log(err));
+      if (done) {
+        selection.removeAllRanges();
+        selection.addRange(newRange);
+      }
+    }
+
+    function handleEditorKeyDown(e) {
+  if (e.key === "Tab") {
+    e.preventDefault();
+    document.execCommand('insertText', false, '    ');
+    updatePreview();
+  } else if (e.key === "Enter") {
+    e.preventDefault();
+    document.execCommand('insertLineBreak');
+    updatePreview();
+  }
+}
+
+editor.addEventListener("keydown", handleEditorKeyDown);
+
+    function moveCursorToEnd() {
+      const range = document.createRange();
+      const sel = window.getSelection();
+      range.selectNodeContents(editor);
+      range.collapse(false);
+      sel.removeAllRanges();
+      sel.addRange(range);
+    }
+
+    toggleLayout.addEventListener("click", () => {
+      if (editorContainer.classList.contains("flex-row")) {
+        editorContainer.classList.remove("flex-row", "space-x-4");
+        editorContainer.classList.add("flex-col", "space-y-4");
+        preview.classList.remove("w-1/2");
+        preview.classList.add("w-full", "h-1/2");
+        editor.classList.remove("w-1/2");
+        editor.classList.add("w-full", "h-1/2");
+
+        //change icon
+        toggleLayout.innerHTML = '<i class="fas fa-columns"></i>';
+      } else {
+        editorContainer.classList.remove("flex-col", "space-y-4");
+        editorContainer.classList.add("flex-row", "space-x-4");
+        preview.classList.remove("w-full", "h-1/2");
+        preview.classList.add("w-1/2");
+        editor.classList.remove("w-full", "h-1/2");
+        editor.classList.add("w-1/2");
+        //change icon to row
+        toggleLayout.innerHTML =
+          '<i class="fas fa-columns fa-rotate-270"></i>';
+      }
+    });
+
+    swapPositions.addEventListener("click", () => {
+      if (editorContainer.classList.contains("flex-row")) {
+        editorContainer.prepend(editorContainer.lastElementChild);
+        if (editorContainer.classList.contains("flex-row")) {
+          swapPositions.innerHTML = '<i class="fas fa-exchange-alt"></i>';
         } else {
-          document.exitFullscreen();
+          swapPositions.innerHTML =
+            '<i class="fas fa-exchange-alt fa-rotate-90"></i>';
         }
-      });
-
-      document.addEventListener("contextmenu", (e) => {
-        e.preventDefault();
-        contextMenu.style.top = `${e.clientY}px`;
-        contextMenu.style.left = `${e.clientX}px`;
-        contextMenu.classList.remove("hidden");
-        contextMenu.style.backgroundColor = "transparent";
-        contextMenu.style.border = "none";
-      });
-
-      contextToggleLayout.addEventListener("click", () => {
-        toggleLayout.click();
-        contextMenu.classList.add("hidden");
-      });
-
-      contextSwapPositions.addEventListener("click", () => {
-        swapPositions.click();
-        contextMenu.classList.add("hidden");
-      });
-
-      contextToggleDarkMode.addEventListener("click", () => {
-        toggleDarkMode.click();
-        contextMenu.classList.add("hidden");
-      });
-
-      contextToggleHeight.addEventListener("click", () => {
-        toggleHeight.click();
-        contextMenu.classList.add("hidden");
-      });
-
-      contextFullscreenPreview.addEventListener("click", () => {
-        fullscreenPreview.click();
-        contextMenu.classList.add("hidden");
-      });
-
-      document.addEventListener("click", (e) => {
-        if (!contextMenu.contains(e.target)) {
-          contextMenu.classList.add("hidden");
+      } else {
+        editorContainer.append(editorContainer.firstElementChild);
+        if (editorContainer.classList.contains("flex-row")) {
+          swapPositions.innerHTML = '<i class="fas fa-exchange-alt"></i>';
+        } else {
+          swapPositions.innerHTML =
+            '<i class="fas fa-exchange-alt fa-rotate-90"></i>';
         }
-      });
+      }
+    });
 
-      formatCodeButton.addEventListener("click", () => {
-        const unformattedCode = editor.textContent; 
-        const formattedCode = html_beautify(unformattedCode, {
-          indent_size: 2,
-          indent_char: " ",
-          max_preserve_newlines: 1,
-          preserve_newlines: true,
-          keep_array_indentation: false,
-          break_chained_methods: false,
-          indent_scripts: "keep",
-          brace_style: "collapse,preserve-inline",
-          space_before_conditional: true,
-          unescape_strings: false,
-          jslint_happy: false,
-          end_with_newline: false,
-          wrap_line_length: 0,
-          indent_inner_html: false,
-          comma_first: false,
-          e4x: false,
-          indent_empty_lines: false,
-        });
-        preserveCursorPosition(() => {
-          editor.textContent = formattedCode;
-          updatePreview();
-        });
+    toggleDarkMode.addEventListener("click", () => {
+      document.documentElement.classList.toggle("dark");
+      if (document.documentElement.classList.contains("dark")) {
+        localStorage.setItem("color-theme", "dark");
+        //change icon
+        toggleDarkMode.innerHTML = '<i class="fas fa-sun"></i>';
+        //add title
+        toggleDarkMode.title = "Toggle Light Mode";
+      } else {
+        localStorage.setItem("color-theme", "light");
+        //change icon
+        toggleDarkMode.innerHTML = '<i class="fas fa-moon"></i>';
+        //add title
+        toggleDarkMode.title = "Toggle Dark Mode";
+      }
+      Prism.highlightElement(editor);
+    });
 
+    toggleHeight.addEventListener("click", () => {
+      // preview.classList.toggle("h-[calc(100vh-120px)]");
+      // editor.classList.toggle("h-[calc(100vh-120px)]");
+      // //change icon
+      if (editor.classList.contains("h-[calc(100vh-120px)]")) {
+        toggleHeight.innerHTML = '<i class="fas fa-arrows-alt-h"></i>';
+
+        //add title
+        toggleHeight.title = "Collapse Editor to original height";
+
+        preview.classList.remove("h-[calc(100vh-120px)]");
+        editor.classList.remove("h-[calc(100vh-120px)]");
+
+        preview.classList.add("h-fit");
+        editor.classList.add("h-fit");
+
+        console.log(editor.classList.contains("h-[calc(100vh-120px)]"));
+      } else {
+        toggleHeight.innerHTML = '<i class="fas fa-arrows-alt-v"></i>';
+
+        toggleHeight.title = "Set Editor to fit with content";
+
+        preview.classList.remove("h-fit");
+        editor.classList.remove("h-fit");
+
+        preview.classList.add("h-[calc(100vh-120px)]");
+        editor.classList.add("h-[calc(100vh-120px)]");
+      }
+    });
+
+    fullscreenPreview.addEventListener("click", () => {
+      if (!document.fullscreenElement) {
+        editorContainer.requestFullscreen().catch((err) => console.log(err));
+      } else {
+        document.exitFullscreen();
+      }
+    });
+
+    document.addEventListener("contextmenu", (e) => {
+      e.preventDefault();
+      contextMenu.style.top = `${e.clientY}px`;
+      contextMenu.style.left = `${e.clientX}px`;
+      contextMenu.classList.remove("hidden");
+      contextMenu.style.backgroundColor = "transparent";
+      contextMenu.style.border = "none";
+    });
+
+    contextToggleLayout.addEventListener("click", () => {
+      toggleLayout.click();
+      contextMenu.classList.add("hidden");
+    });
+
+    contextSwapPositions.addEventListener("click", () => {
+      swapPositions.click();
+      contextMenu.classList.add("hidden");
+    });
+
+    contextToggleDarkMode.addEventListener("click", () => {
+      toggleDarkMode.click();
+      contextMenu.classList.add("hidden");
+    });
+
+    contextToggleHeight.addEventListener("click", () => {
+      toggleHeight.click();
+      contextMenu.classList.add("hidden");
+    });
+
+    contextFullscreenPreview.addEventListener("click", () => {
+      fullscreenPreview.click();
+      contextMenu.classList.add("hidden");
+    });
+
+    document.addEventListener("click", (e) => {
+      if (!contextMenu.contains(e.target)) {
         contextMenu.classList.add("hidden");
-      });
+      }
+    });
 
-      window.addEventListener("load", () => {
-        editor.focus();
+    formatCodeButton.addEventListener("click", () => {
+      const unformattedCode = editor.innerText;
+      const formattedCode = html_beautify(unformattedCode, {
+        indent_size: 2,
+        indent_char: " ",
+        max_preserve_newlines: 1,
+        preserve_newlines: true,
+        keep_array_indentation: false,
+        break_chained_methods: false,
+        indent_scripts: "keep",
+        brace_style: "collapse,preserve-inline",
+        space_before_conditional: true,
+        unescape_strings: false,
+        jslint_happy: false,
+        end_with_newline: false,
+        wrap_line_length: 0,
+        indent_inner_html: false,
+        comma_first: false,
+        e4x: false,
+        indent_empty_lines: false,
+      });
+      preserveCursorPosition(() => {
+        editor.innerText = formattedCode;
         updatePreview();
-        //moveCursorToEnd();
       });
 
-      // Initial update and cursor position adjustment
+      contextMenu.classList.add("hidden");
+    });
+
+
+
+    window.addEventListener("load", () => {
+      editor.focus();
       updatePreview();
-      moveCursorToEnd();
-    </script>
-  </body>
+      //moveCursorToEnd();
+    });
+
+    // Initial update and cursor position adjustment
+    updatePreview();
+    moveCursorToEnd();
+  </script>
+</body>
+
 </html>
