@@ -281,10 +281,25 @@
 
       function updatePreview() {
         const previewFrame = document.getElementById("preview");
-        const previewContent = editor.innerText; // Use innerText instead of textContent
+        const previewContent = editor.innerText;
         previewFrame.srcdoc = previewContent;
         Prism.highlightElement(editor);
-        moveCursorToEnd();
+        // Remove the moveCursorToEnd() call from here
+      }
+
+      function preserveCursorPosition(callback) {
+        const selection = window.getSelection();
+        const range = selection.getRangeAt(0);
+        const start = range.startOffset;
+        const end = range.endOffset;
+
+        callback();
+
+        const newRange = document.createRange();
+        newRange.setStart(editor.firstChild, start);
+        newRange.setEnd(editor.firstChild, end);
+        selection.removeAllRanges();
+        selection.addRange(newRange);
       }
 
       function handleEditorKeyDown(e) {
@@ -308,7 +323,11 @@
         sel.addRange(range);
       }
 
-      editor.addEventListener("input", updatePreview);
+      editor.addEventListener("input", () => {
+        preserveCursorPosition(() => {
+          updatePreview();
+        });
+      });
 
       toggleLayout.addEventListener("click", () => {
         if (editorContainer.classList.contains("flex-row")) {
@@ -471,14 +490,18 @@
           e4x: false,
           indent_empty_lines: false,
         });
-        editor.textContent = formattedCode;
-        updatePreview();
+        preserveCursorPosition(() => {
+          editor.textContent = formattedCode;
+          updatePreview();
+        });
+
         contextMenu.classList.add("hidden");
       });
 
       window.addEventListener("load", () => {
         editor.focus();
         updatePreview();
+        moveCursorToEnd();
       });
 
       // Initial update and cursor position adjustment

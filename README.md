@@ -26,7 +26,7 @@ A single-file HTML live editor and previewer with a simple and intuitive interfa
 ## 📝 TODO List
 
 - [ ] Add markdown support
-- [ ] Fix cursor position issue
+- [x] Fix cursor position issue
 - [ ] Add more themes
 - [ ] Add more export options
 
